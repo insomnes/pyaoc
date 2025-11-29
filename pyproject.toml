@@ -1,0 +1,13 @@
+[project]
+name = "pyaoc"
+version = "0.1.0"
+requires-python = ">=3.13"
+dependencies = []
+
+# Add ruff as dev dependency
+[project.optional-dependencies]
+lint = ["ruff"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py313"
