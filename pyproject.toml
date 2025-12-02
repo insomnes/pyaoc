@@ -2,12 +2,29 @@
 name = "pyaoc"
 version = "0.1.0"
 requires-python = ">=3.13"
-dependencies = []
+dependencies = [
+    "click>=8.3.1",
+]
 
-# Add ruff as dev dependency
-[project.optional-dependencies]
-lint = ["ruff"]
+[build-system]
+requires = ["uv_build"]
+build-backend = "uv_build"
+
+[tool.uv]
+package = true
+
+[project.scripts]
+pyaoc = "pyaoc.cli:run"
+
+[dependency-groups]
+dev = [
+    "pytest>=9.0.1",
+    "ruff>=0.14.7",
+]
 
 [tool.ruff]
+extend-select = ["E", "W", "F", "C", "SIM", "B", "Q", "I"]
 line-length = 100
 target-version = "py313"
+
+
