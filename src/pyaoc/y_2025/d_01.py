@@ -1,4 +1,4 @@
-from pyaoc.libr.modclock import CountMode, ModClock
+from librarium.modclock import CountMode, ModClock
 from pyaoc.solution import Solution
 
 START = 50
