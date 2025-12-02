@@ -1,4 +1,4 @@
-from pyaoc.libr.modclock import CountMode, CrossingPositionTracker, ModClock, PositionTracker
+from librarium.modclock import CountMode, CrossingPositionTracker, ModClock, PositionTracker
 
 
 class TestPositionTracker:
