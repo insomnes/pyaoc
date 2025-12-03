@@ -5,6 +5,7 @@ from pyaoc.input import read_input_file
 
 ParsedInputT = TypeVar("ParsedInputT")
 
+
 class Solution[ParsedInputT](ABC):
     YEAR: int
     DAY: int
@@ -77,7 +78,9 @@ class SolutionRegistry:
     def __len__(self) -> int:
         return len(self._registry)
 
+
 SOLUTION_REGISTRY = SolutionRegistry()
+
 
 def register(solution_cls: type[Solution]) -> None:
     global SOLUTION_REGISTRY

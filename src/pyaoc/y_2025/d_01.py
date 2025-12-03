@@ -7,6 +7,7 @@ LOOKUP = 0
 
 type ParsedInput = list[int]
 
+
 class Solution250101(Solution[ParsedInput]):
     YEAR: int = 2025
     DAY: int = 1
@@ -45,6 +46,7 @@ class Solution250102(Solution250101):
         )
         mod_clock.make_moves(self.parsed_input)
         return mod_clock.counter
+
 
 Solution250101.register()
 Solution250102.register()

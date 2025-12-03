@@ -29,6 +29,7 @@ class Solution200101(Solution[ParsedInput]):
             return result
         raise ValueError("No solution found.")
 
+
 class Solution200102(Solution200101):
     PART: int = 2
 
@@ -39,6 +40,7 @@ class Solution200102(Solution200101):
             if result is not None:
                 return x * result
         raise ValueError("No solution found.")
+
 
 Solution200101.register()
 Solution200102.register()

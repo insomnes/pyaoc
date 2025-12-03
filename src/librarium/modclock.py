@@ -39,15 +39,16 @@ class CrossingPositionTracker(PositionTracker):
         self.cur = total % self.modulus
 
 
-
 class CountMode(StrEnum):
     EXACT = "exact"
     CROSSING = "crossing"
+
 
 COUNTERS: dict[str, type[PositionTracker]] = {
     CountMode.EXACT: PositionTracker,
     CountMode.CROSSING: CrossingPositionTracker,
 }
+
 
 class ModClock:
     def __init__(self, *, tracker: PositionTracker):
@@ -84,6 +85,3 @@ class ModClock:
             to_look_up=to_look_up,
         )
         return cls(tracker=tracker)
-
-
-

@@ -45,11 +45,11 @@ class IDRange:
             raise ValueError("Cannot normalize an IDRange with both lengths odd")
         if self.s_len % 2 == 0:
             new_start = self.start
-            new_end = (10 ** self.s_len) - 1
+            new_end = (10**self.s_len) - 1
             new_len = self.s_len
 
         else:
-            new_start = 10 ** self.s_len
+            new_start = 10**self.s_len
             new_end = self.end
             new_len = self.e_len
         return IDRange(
@@ -58,8 +58,6 @@ class IDRange:
             s_len=new_len,
             e_len=new_len,
         )
-
-
 
 
 type ParsedInput = list[IDRange]
@@ -98,7 +96,6 @@ def find_invalid_p2(idr: IDRange) -> set[int]:  # noqa: C901
         e_min = next((i for i in range(2, idr.e_len + 1) if idr.e_len % i == 0), idr.e_len + 1)
         min_repeats = min(s_min, e_min)
 
-
     nums = set()
 
     @lru_cache
@@ -130,7 +127,6 @@ def find_invalid_p2(idr: IDRange) -> set[int]:  # noqa: C901
             if not check_repeats(reps, n):
                 break
 
-
     for r in range(min_repeats, max_repeats + 1):
         if idr.s_len % r != 0 and idr.e_len % r != 0:
             continue
@@ -141,9 +137,9 @@ def find_invalid_p2(idr: IDRange) -> set[int]:  # noqa: C901
 
         if idr.s_len % r == 0:
             new_start = idr.start
-            new_end = (10 ** idr.s_len) - 1
+            new_end = (10**idr.s_len) - 1
         elif idr.e_len % r == 0:
-            new_start = 10 ** idr.s_len
+            new_start = 10**idr.s_len
             new_end = idr.end
         else:
             raise RuntimeError("Should not be here")
@@ -151,12 +147,6 @@ def find_invalid_p2(idr: IDRange) -> set[int]:  # noqa: C901
         find_invalids_in_range(new_start, new_end, r)
 
     return nums
-
-
-
-
-
-
 
 
 class Solution250201(Solution[ParsedInput]):

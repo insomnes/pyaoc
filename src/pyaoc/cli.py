@@ -46,11 +46,7 @@ def run(
     elif days is None or len(days) == 0:
         to_solve = [(year, day, part) for year in years for day in range(1, 26) for part in (1, 2)]
     else:
-
-        to_solve = [
-            (year, day, part)
-            for year, day, part in product(years, days, (1, 2))
-        ]
+        to_solve = [(year, day, part) for year, day, part in product(years, days, (1, 2))]
 
     solver = Solver(to_solve=to_solve, with_sample=with_sample)
     solver.solve_all()

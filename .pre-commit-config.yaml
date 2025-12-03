@@ -1,6 +1,11 @@
 repos:
   - repo: local
     hooks:
+      - id: ruff-fmt
+        name: ruff-fmt (venv)
+        entry: ruff format
+        language: system
+        types: [python]
       - id: ruffsort
         name: ruffsort (venv)
         entry: ruff check --select I --fix

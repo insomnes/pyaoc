@@ -10,9 +10,7 @@ class Solver:
         self.registry = SOLUTION_REGISTRY
 
     def solve(self, key: SolKey) -> int:
-        solution_instance = self.registry.prepare_solution_instance(
-            key, sample=self._with_sample
-        )
+        solution_instance = self.registry.prepare_solution_instance(key, sample=self._with_sample)
         print(f"Solving {key} using {type(solution_instance).__name__}...")
         return solution_instance.solve()
 
@@ -60,4 +58,3 @@ class Solver:
                 print("<< Sample Input End >>")
             else:
                 print("<< Actual Input End >>")
-

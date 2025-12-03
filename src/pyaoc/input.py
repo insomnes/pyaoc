@@ -6,7 +6,6 @@ YEAR_TEMPLATE = "y_{year:04d}"
 DAY_TEMPLATE = "d_{day:02d}"
 
 
-
 def prepare_input_path(year: int, day: int, sample: bool = False) -> Path:
     year_name = YEAR_TEMPLATE.format(year=year)
     day_name = DAY_TEMPLATE.format(day=day)
