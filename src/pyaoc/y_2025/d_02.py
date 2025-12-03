@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from functools import cached_property, lru_cache
+from functools import cached_property
 
 from pyaoc.solution import Solution
 
@@ -98,7 +98,6 @@ def find_invalid_p2(idr: IDRange) -> set[int]:  # noqa: C901
 
     nums = set()
 
-    @lru_cache
     def check_repeats(r: int, num: int) -> bool:
         nonlocal nums
         rep_num, pow_mul = num, 10 ** (len(str(num)))
@@ -113,7 +112,6 @@ def find_invalid_p2(idr: IDRange) -> set[int]:  # noqa: C901
 
     max_repeats = idr.s_len if idr.has_eq_lengths else idr.e_len
 
-    @lru_cache
     def find_invalids_in_range(start: int, end: int, reps: int) -> None:
         s_len = len(str(start))
         n_start, n_end = start, end
@@ -132,15 +130,11 @@ def find_invalid_p2(idr: IDRange) -> set[int]:  # noqa: C901
             continue
 
         if idr.has_eq_lengths:
-            find_invalids_in_range(idr.start, idr.end, r)
-            continue
-
-        if idr.s_len % r == 0:
-            new_start = idr.start
-            new_end = (10**idr.s_len) - 1
+            new_start, new_end = idr.start, idr.end
+        elif idr.s_len % r == 0:
+            new_start, new_end = idr.start, (10**idr.s_len) - 1
         elif idr.e_len % r == 0:
-            new_start = 10**idr.s_len
-            new_end = idr.end
+            new_start, new_end = 10**idr.s_len, idr.end
         else:
             raise RuntimeError("Should not be here")
 
