@@ -1,3 +1,4 @@
+from array import array
 from pathlib import Path
 
 from pyaoc.config import INPUTS_DIR
@@ -21,3 +22,22 @@ def read_input_file(year: int, day: int, sample: bool = False) -> list[str]:
 
 def parse_input_lines_as_ints(input_lines: list[str]) -> list[int]:
     return [int(line.strip()) for line in input_lines]
+
+
+def parse_line_as_ints(line: str, sep: str | None = None) -> list[int]:
+    return (
+        [int(part) for part in line.strip().split(sep)] if sep else [int(n) for n in line.strip()]
+    )
+
+
+def parse_line_as_int_arr(line: str, t_code: str, sep: str | None = None) -> array:
+    init_ints = (
+        (int(part) for part in line.strip().split(sep)) if sep else (int(n) for n in line.strip())
+    )
+    return array(t_code, init_ints)
+
+
+def parse_input_lines_as_lists_of_ints(
+    input_lines: list[str], sep: str | None = None
+) -> list[list[int]]:
+    return [parse_line_as_ints(line, sep) for line in input_lines]
