@@ -41,3 +41,7 @@ def parse_input_lines_as_lists_of_ints(
     input_lines: list[str], sep: str | None = None
 ) -> list[list[int]]:
     return [parse_line_as_ints(line, sep) for line in input_lines]
+
+
+def parse_input_lines_as_chars(input_lines: list[str]) -> list[list[str]]:
+    return [list(line.strip()) for line in input_lines]
