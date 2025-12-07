@@ -45,3 +45,18 @@ def parse_input_lines_as_lists_of_ints(
 
 def parse_input_lines_as_chars(input_lines: list[str]) -> list[list[str]]:
     return [list(line.strip()) for line in input_lines]
+
+
+def parse_input_lines_as_columns(input_lines: list[str]) -> list[list[str]]:
+    if not input_lines:
+        return []
+
+    num_cols = len(input_lines[0].strip())
+    columns = [[] for _ in range(num_cols)]
+
+    for line in input_lines:
+        stripped_line = line.strip()
+        for col_idx in range(num_cols):
+            columns[col_idx].append(stripped_line[col_idx])
+
+    return columns
