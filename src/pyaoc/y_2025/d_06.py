@@ -1,6 +1,6 @@
 from pyaoc.solution import Solution
 
-type ParsedInput = list[str]
+type ParsedInput = list[str]  # We don't want to parse it here
 
 
 class Op:
@@ -29,6 +29,10 @@ class Op:
             raise ValueError(f"Unknown operation: {self.action}")
 
 
+def _parse_operations(line: str) -> list[Op]:
+    return [Op(v.strip()) for v in line.split(" ") if v.strip()]
+
+
 class Solution250601(Solution[ParsedInput]):
     YEAR: int = 2025
     DAY: int = 6
@@ -38,7 +42,7 @@ class Solution250601(Solution[ParsedInput]):
         return input_lines
 
     def solve(self) -> int:
-        operations = [Op(v.strip()) for v in self.parsed_input[-1].split(" ") if v.strip()]
+        operations = _parse_operations(self.parsed_input[-1])
         for line in self.parsed_input[:-1]:
             parts = [int(v.strip()) for v in line.strip().split(" ") if v.strip()]
             assert len(parts) == len(operations)
@@ -51,7 +55,28 @@ class Solution250602(Solution250601):
     PART: int = 2
 
     def solve(self) -> int:
-        return -1
+        operations = _parse_operations(self.parsed_input[-1])
+        n_rows, n_cols = len(self.parsed_input) - 1, len(self.parsed_input[0])
+        op_idx = -1
+        cur_num = 0
+
+        for col in range(n_cols - 1, -1, -1):
+            for row in range(n_rows):
+                char = self.parsed_input[row][col]
+                if char == " ":
+                    continue
+                v = int(char)
+                cur_num = cur_num * 10 + v
+
+            if cur_num == 0:  # All ' ' in this col
+                op_idx -= 1
+                continue
+
+            operations[op_idx].execute(cur_num)
+            cur_num = 0
+
+        return sum(op.value for op in operations)
 
 
 Solution250601.register()
+Solution250602.register()
