@@ -11,12 +11,15 @@ class Solver:
 
     def solve(self, key: SolKey) -> int:
         solution_instance = self.registry.prepare_solution_instance(key, sample=self._with_sample)
-        print(f"Solving {key} using {type(solution_instance).__name__}...")
+        year, day, part = key
+        s_key = f"{str(year)[-2:]:02}{day:02}{part:02}"
+        print(f"Solving {s_key} using {type(solution_instance).__name__}...")
         return solution_instance.solve()
 
     def solve_all(self) -> None:
         results: dict[SolKey, int] = {}
         prev_year, prev_day, prev_part = -1, -1, -1
+        total_start = perf_counter()
 
         for key in self._to_solve:
             if key not in self.registry:
@@ -58,3 +61,7 @@ class Solver:
                 print("<< Sample Input End >>")
             else:
                 print("<< Actual Input End >>")
+
+        total_duration = perf_counter() - total_start
+        print("=====================")
+        print(f"All done in {total_duration:.6f} seconds (with parsing and setup).")
