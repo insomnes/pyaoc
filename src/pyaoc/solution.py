@@ -11,9 +11,10 @@ class Solution[ParsedInputT](ABC):
     DAY: int
     PART: int
 
-    def __init__(self, input_lines: list[str]) -> None:
+    def __init__(self, input_lines: list[str], sample: bool) -> None:
         self._check_attributes()
 
+        self.with_sample = sample
         self._input_lines = input_lines.copy()
         self.parsed_input = self._parse_input(self._input_lines)
 
@@ -55,7 +56,7 @@ class SolutionRegistry:
     def prepare_solution_instance(self, key: SolKey, sample: bool = False) -> Solution:
         solution_cls = self._registry[key]
         input_lines = read_input_file(solution_cls.YEAR, solution_cls.DAY, sample)
-        return solution_cls(input_lines)
+        return solution_cls(input_lines, sample)
 
     def get_solution(self, key: tuple[int, int, int]) -> type[Solution]:
         return self._registry[key]
