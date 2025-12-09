@@ -114,7 +114,7 @@ def _parse_input(input_lines: list[str]) -> tuple[DistHeap, list[Point]]:
         return sqrt(dx_sq + dy_sq + dz_sq)
 
     for line in input_lines:
-        point = Point(*tuple(int(v) for v in line.split(",")))
+        point = Point(*[int(v) for v in line.split(",")])
 
         for exst_p in heapq.nsmallest(k_closest, prev_points, key=lambda p: _calc_dist(point, p)):
             dist = _calc_dist(point, exst_p)
