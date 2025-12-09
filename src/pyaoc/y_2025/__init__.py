@@ -5,6 +5,7 @@ from pyaoc.y_2025.d_04 import Solution250401, Solution250402
 from pyaoc.y_2025.d_05 import Solution250501, Solution250502
 from pyaoc.y_2025.d_06 import Solution250601, Solution250602
 from pyaoc.y_2025.d_07 import Solution250701, Solution250702
+from pyaoc.y_2025.d_08 import Solution250801, Solution250802
 
 __all__ = [
     "Solution250101",
@@ -21,4 +22,6 @@ __all__ = [
     "Solution250602",
     "Solution250701",
     "Solution250702",
+    "Solution250801",
+    "Solution250802",
 ]
