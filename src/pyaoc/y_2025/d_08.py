@@ -107,9 +107,11 @@ class Schema:
 def _parse_input(input_lines: list[str]) -> tuple[DistHeap, list[Point]]:
     prev_points: list[Point] = []
     distances: DistHeap = []
-    # N * log(N) edges is enough to build MST with very high probability
-    # because MST is a subgraph of the Delaunay triangulation which has O(N) edges on average
-    # and Delaunay triangulation is built from "close" points
+    # We only keep O(N log N) local edges by connecting each point
+    # to its k ~ log N nearest previous points. For random point sets,
+    # MST edges tend to be between nearby points and the true MST is contained in the
+    # (sparse) Delaunay triangulation, so this pruned graph should still contain
+    # all MST edges with high probability, but this is not guaranteed for any input
     k_closest = ceil(log(len(input_lines)))
     print(f"Using k={k_closest} closest points out of {len(input_lines) - 1} total points")
 
