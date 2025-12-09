@@ -1,4 +1,5 @@
 import heapq
+from functools import partial
 from math import ceil, log, sqrt
 from typing import NamedTuple
 
@@ -106,6 +107,9 @@ class Schema:
 def _parse_input(input_lines: list[str]) -> tuple[DistHeap, list[Point]]:
     prev_points: list[Point] = []
     distances: DistHeap = []
+    # N * log(N) edges is enough to build MST with very high probability
+    # because MST is a subgraph of the Delaunay triangulation which has O(N) edges on average
+    # and Delaunay triangulation is built from "close" points
     k_closest = ceil(log(len(input_lines)))
     print(f"Using k={k_closest} closest points out of {len(input_lines) - 1} total points")
 
@@ -115,12 +119,14 @@ def _parse_input(input_lines: list[str]) -> tuple[DistHeap, list[Point]]:
 
     for line in input_lines:
         point = Point(*[int(v) for v in line.split(",")])
+        p_cd = partial(_calc_dist, point)
 
-        for exst_p in heapq.nsmallest(k_closest, prev_points, key=lambda p: _calc_dist(point, p)):
-            dist = _calc_dist(point, exst_p)
-            distances.append((dist, (point, exst_p)))
+        for dist, exst_p in heapq.nsmallest(
+            k_closest, zip(map(p_cd, prev_points), prev_points, strict=True)
+        ):
+            k1, k2 = (point, exst_p) if point < exst_p else (exst_p, point)
+            heapq.heappush(distances, (dist, (k1, k2)))
         prev_points.append(point)
-    assert len(prev_points) == len(input_lines)
     return distances, prev_points
 
 
@@ -154,7 +160,6 @@ class Solution250802(Solution250801):
 
     def solve_custom(self) -> int:
         dist_heap, points = self.parsed_input
-        heapq.heapify(dist_heap)
         schema = Schema(init_points=points)
 
         p1, p2 = Point(0, 0, 0), Point(0, 0, 0)
@@ -166,12 +171,6 @@ class Solution250802(Solution250801):
 
     def solve(self) -> int:
         dist_heap, points = self.parsed_input
-        # N * log(N) edges is enough to build MST with very high probability
-        # because MST is a subgraph of the Delaunay triangulation which has O(N) edges on average
-        # and Delaunay triangulation is built from "close" points
-        k_elements = ceil(len(points) * log(len(points)))
-        print(f"Using top {k_elements} edges for MST from total {len(dist_heap)} edges")
-        dist_heap = heapq.nsmallest(k_elements, dist_heap)
         unfn = UnionFind(init_elements=points)
 
         p1, p2 = points[0], points[0]
