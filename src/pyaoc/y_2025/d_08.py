@@ -106,17 +106,19 @@ class Schema:
 def _parse_input(input_lines: list[str]) -> tuple[DistHeap, list[Point]]:
     prev_points: list[Point] = []
     distances: DistHeap = []
+    k_closest = ceil(log(len(input_lines)))
+    print(f"Using k={k_closest} closest points out of {len(input_lines) - 1} total points")
+
+    def _calc_dist(dp1: Point, dp2: Point) -> float:
+        dx_sq, dy_sq, dz_sq = (dp1.x - dp2.x) ** 2, (dp1.y - dp2.y) ** 2, (dp1.z - dp2.z) ** 2
+        return sqrt(dx_sq + dy_sq + dz_sq)
 
     for line in input_lines:
-        x_str, y_str, z_str = line.split(",")
-        point = Point(int(x_str), int(y_str), int(z_str))
-        for exst_p in prev_points:
-            p1, p2 = point, exst_p
-            if p1 > p2:
-                p1, p2 = p2, p1
-            dx_sq, dy_sq, dz_sq = (p1.x - p2.x) ** 2, (p1.y - p2.y) ** 2, (p1.z - p2.z) ** 2
-            dist = sqrt(dx_sq + dy_sq + dz_sq)
-            distances.append((dist, (p1, p2)))
+        point = Point(*tuple(int(v) for v in line.split(",")))
+
+        for exst_p in heapq.nsmallest(k_closest, prev_points, key=lambda p: _calc_dist(point, p)):
+            dist = _calc_dist(point, exst_p)
+            distances.append((dist, (point, exst_p)))
         prev_points.append(point)
     assert len(prev_points) == len(input_lines)
     return distances, prev_points
