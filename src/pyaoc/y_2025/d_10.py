@@ -1,4 +1,6 @@
 import re
+from collections import deque
+from functools import lru_cache
 from typing import NamedTuple
 
 from pyaoc.solution import Solution
@@ -80,6 +82,81 @@ def _parse_input(input_lines: list[str]) -> ParsedInput:
     return parsed
 
 
+def bitmask_bfs(target: int, bin_len: int, bit_masks: list[int]) -> int:
+    max_states = 1 << bin_len
+    distances = [-1] * max_states
+
+    parent: list[int | None] = [None] * max_states
+    parent_mask: list[int | None] = [None] * max_states
+
+    start = 0
+    distances[start] = 0
+    q = deque([start])
+
+    while q:
+        state = q.popleft()
+        cur_dist = distances[state]
+
+        for mask in bit_masks:
+            next_state = state ^ mask
+            if distances[next_state] != -1:
+                continue
+            distances[next_state] = cur_dist + 1
+            if next_state == target:
+                return distances[next_state]
+            parent[next_state] = state
+            parent_mask[next_state] = mask
+            q.append(next_state)
+
+    raise RuntimeError("Not found")
+
+
+@lru_cache
+def _increase_joltage(jolts: tuple[int, ...], jolt_button: tuple[int, ...]) -> tuple[int, ...]:
+    def _jolt_generator():
+        for i, jolt in enumerate(jolts):
+            if i in jolt_button:
+                yield jolt + 1
+            else:
+                yield jolt
+
+    res = tuple(_jolt_generator())
+    assert len(res) == len(jolts)
+    return res
+
+
+@lru_cache
+def _decrease_joltage(
+    jolts: tuple[int, ...], jolt_button: tuple[int, ...], n: int = 1
+) -> tuple[int, ...]:
+    def _jolt_generator():
+        for i, jolt in enumerate(jolts):
+            if i in jolt_button:
+                yield jolt - n
+            else:
+                yield jolt
+
+    res = tuple(_jolt_generator())
+    assert len(res) == len(jolts)
+    return res
+
+
+def _find_joltage_jolt_buttons(
+    jolts: list[int], buttons: list[tuple[int, ...]]
+) -> list[list[tuple[int, ...]]]:
+    # indexes of buttons that can increase each jolt
+    jolts_buttons: list[list[tuple[int, ...]]] = [[] for _ in jolts]
+    for jolt_idx, _ in enumerate(jolts):
+        j_buttons = [btn for i, btn in enumerate(buttons) if jolt_idx in btn]
+        jolts_buttons[jolt_idx] = j_buttons
+    return jolts_buttons
+
+
+def _joltage_delta(j1: tuple[int, ...], j2: tuple[int, ...]) -> tuple[int, ...]:
+    res = tuple(sorted((a - b for a, b in zip(j1, j2, strict=True)), reverse=True))
+    return res
+
+
 class Solution251001(Solution[ParsedInput]):
     YEAR: int = 2025
     DAY: int = 10
@@ -89,13 +166,20 @@ class Solution251001(Solution[ParsedInput]):
         return _parse_input(input_lines)
 
     def solve(self) -> int:
+        total_steps = 0
         for buttons in self.parsed_input:
-            print(buttons)
-        return 0
+            bin_len = len(buttons.bit_num)
+            steps = bitmask_bfs(buttons.num, bin_len, buttons.bit_masks_buttons)
+            total_steps += steps
+        return total_steps
 
 
 class Solution251002(Solution251001):
     PART: int = 2
 
+    def solve(self) -> int:
+        return -1
+
 
 Solution251001.register()
+Solution251002.register()
